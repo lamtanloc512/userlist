@@ -141,7 +141,7 @@
         alert("Phải nhập vào lastname");
         return false;
       }
-      if (isNaN(paramPerson.age)) {
+      if (isNaN(paramPerson.age) && paramPerson.age < 0 && paramPerson.age >150) {
         alert("Phải nhập số");
         return false;
       }
