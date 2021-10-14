@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="list-group mt-5">
+      <div class="card p-3 bg-light rounded-4" style="width: 400px; margin: auto">
+        <form action="" id="form-data">
+          <div class="mb-3">
+            <label for="input-fname" class="form-label">First name</label>
+            <input type="text" class="form-control" id="input-fname" placeholder="First Name ... " />
+          </div>
+          <div class="mb-3">
+            <label for="input-lname" class="form-label">Last name</label>
+            <input type="text" class="form-control" id="input-lname" placeholder="First Name ... " />
+          </div>
+          <div class="mb-3">
+            <label for="input-lage" class="form-label">Age</label>
+            <input type="text" class="form-control" id="input-age" placeholder="Age ... " />
+          </div>
+          <div class="mb-3">
+            <label for="input-email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="input-email" placeholder="Email ... " />
+          </div>
+          <div class="mb-3">
+            <button class="btn btn-primary" id="button-send" type="submit">
+              Send
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card mt-4 p-3 bg-light" style="display: block;" id="div-show-info">
+            <table class="table table-dark table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">STT</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Age</th>
+                  <th scope="col">Email</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-data">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    "use strict";
+    /*** REGION 1 - Global variables - Vùng khai báo biến, hằng số, tham số TOÀN CỤC */
+    // khai báo các biến với các id tương ứng
+    let gInputFnameElement = document.getElementById("input-fname");
+    let gInputLnameElement = document.getElementById("input-lname");
+    let gInputAgeElement = document.getElementById("input-age");
+    let gInputEmailElement = document.getElementById("input-email");
+    let gButtonSendElement = document.getElementById("button-send");
+    let gFormSubmitElement = document.getElementById("form-data");
+    
+    // khai báo mang đối tượng person chứa dữ liệu
+    let gArrayPerson = [];
+
+    /*** REGION 2 - Vùng gán / thực thi sự kiện cho các elements */
+    onPageLoading();
+
+    // Goi hàm submit data từ form, lắng nghe sự kiện submit từ form và truyền vào event 'e'
+    // B1 khai báo và thu dữ liệu lưu vào một object
+    // B2 kiểm tra các dữ liệu nhập vào có hợp lệ hay không
+    // B3 In ra DOM dưới dạng table.
+    gFormSubmitElement.addEventListener('submit',(e) =>{
+      e.preventDefault();
+      console.log('An nut Save Data');
+
+      // B1: thu thap du lieu
+      // Khai báo một object với các value nhận được từ form
+      let vPerson = {
+        fName: gInputFnameElement.value.trim(),
+        lName: gInputLnameElement.value.trim(),
+        age: parseInt(gInputAgeElement.value),
+        email: gInputEmailElement.value.trim(),
+      }
+
+      // B2: kiem tra cac truong du lieu 
+      let vIsValidData = validateData(vPerson)
+      if(vIsValidData){
+        gArrayPerson.push(vPerson);
+        // kiem tra mang gArrayPerson
+        /* console.log(gArrayPerson); */
+        gInputFnameElement.value = "";
+        gInputLnameElement.value = '';
+        gInputAgeElement.value = '';
+        gInputEmailElement.value = '';
+
+        /* alert('Đã lưu dữ liệu'); */
+        /* console.log(gArrayPerson); */
+      }
+
+      // B3: ghi du lieu ra DOM
+      showDataPerson(gArrayPerson);
+
+
+    })
+
+    /*** REGION 3 - Event handlers - Vùng khai báo các hàm xử lý sự kiện */
+    // Khai báo hàm load trang
+    function onPageLoading() {
+      console.log(gInputFnameElement);
+      console.log(gInputLnameElement);
+      console.log(gInputAgeElement);
+      console.log(gInputEmailElement);
+      console.log(gButtonSendElement);
+      // hiển thị các elements lên debugger;
+      // debugger;
+    }
+
+    /*** REGION 4 - Common funtions - Vùng khai báo hàm dùng chung trong toàn bộ chương trình*/
+    // khai báo hàm lấy dữ liệu
+
+    //Hàm kiểm tra dữ liệu trên form
+    function validateData(paramPerson) {
+      if (paramPerson.fName === "") {
+        alert("Phải nhập vào firstname");
+        return false;
+      }
+      if (paramPerson.lName === "") {
+        alert("Phải nhập vào lastname");
+        return false;
+      }
+      if (isNaN(paramPerson.age)) {
+        alert("Phải nhập số");
+        return false;
+      }
+      if (paramPerson.email === "") {
+        alert("Phải đúng định dạng email");
+        return false;
+      }
+      return true;
+    }
+
+    //Hàm hiển thị thông tin môn học
+    function showDataPerson(paramArayPerson) {
+      let vIndex = 0;
+      let vRowData = document.getElementById('tbody-data');
+      // Reset lại bảng để không bị lặp row,
+      vRowData.innerHTML = '';
+      // Duyệt mảng truyền vào 
+      paramArayPerson.forEach(paramPerson => {
+        // Lưu dữ liệu 1 row vào một biến, sử dụng template litterals để bind;
+        let vTemplateData = `
+            <th scope="row">${vIndex + 1}</th>
+            <td>${paramPerson.fName}</td>
+            <td>${paramPerson.lName}</td>
+            <td>${paramPerson.age}</td>
+            <td>${paramPerson.email}</td>
+          `
+        ;
+        // Gắn row vào bảng
+          vRowData.innerHTML += vTemplateData;
+          // Sau khi duyệt xong một phần tử thì số thứ tự sẽ tăng lên 1
+          vIndex++;
+        })  
+    }
+  </script>
+</body>
+
+</html>
